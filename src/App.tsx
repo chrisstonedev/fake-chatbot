@@ -47,16 +47,23 @@ export function App() {
   }, [chatLog]);
 
   return (
-    <>
-      <h1>NoI ChatBot</h1>
+    <article
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr',
+        gridTemplateRows: 'auto 1fr auto',
+        height: '100%',
+        width: '100%',
+      }}
+    >
+      <h1 style={{ margin: 0 }}>No-I Chatbot</h1>
       <div
         style={{
           background: '#ffeeee',
           display: 'flex',
           flexDirection: 'column',
-          height: 400,
+          overflowX: 'hidden',
           overflowY: 'scroll',
-          width: 800,
         }}
       >
         {chatLog.map(({ sender, message }, index) => (
@@ -88,17 +95,15 @@ export function App() {
           </p>
         )}
       </div>
-      <form action={formAction}>
+      <form action={formAction} style={{ display: 'flex' }}>
         <input
           type="text"
           name="name"
           autoComplete="off"
-          style={{ width: 800, fontSize: 16 }}
+          style={{ fontSize: 16, width: '100%' }}
         />
-        <button type="submit" hidden>
-          Submit
-        </button>
+        <button type="submit">Send</button>
       </form>
-    </>
+    </article>
   );
 }
