@@ -47,61 +47,35 @@ export function App() {
   }, [chatLog]);
 
   return (
-    <article
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-        gridTemplateRows: 'auto 1fr auto',
-        height: '100%',
-        width: '100%',
-      }}
-    >
-      <h1 style={{ margin: 0 }}>No-I Chatbot</h1>
-      <div
-        style={{
-          background: '#ffeeee',
-          display: 'flex',
-          flexDirection: 'column',
-          overflowX: 'hidden',
-          overflowY: 'scroll',
-        }}
-      >
-        {chatLog.map(({ sender, message }, index) => (
-          <p
-            key={index}
-            ref={
-              !typing && index === chatLog.length - 1
-                ? lastMessageRef
-                : undefined
-            }
-            className={
-              'chatMessage ' + (sender === 'bot' ? 'botMessage' : 'userMessage')
-            }
-          >
-            {message}
-          </p>
-        ))}
-        {typing && (
-          <p
-            ref={lastMessageRef}
-            style={{
-              fontWeight: 700,
-              margin: '4px 20px',
-              padding: 6,
-              textAlign: 'left',
-            }}
-          >
-            ...
-          </p>
-        )}
-      </div>
-      <form action={formAction} style={{ display: 'flex' }}>
-        <input
-          type="text"
-          name="name"
-          autoComplete="off"
-          style={{ fontSize: 16, width: '100%' }}
-        />
+    <article>
+      <h1>No-I Chatbot</h1>
+      {chatLog.length > 0 && (
+        <div className="chatLog">
+          {chatLog.map(({ sender, message }, index) => (
+            <p
+              key={index}
+              ref={
+                !typing && index === chatLog.length - 1
+                  ? lastMessageRef
+                  : undefined
+              }
+              className={
+                'chatMessage ' +
+                (sender === 'bot' ? 'botMessage' : 'userMessage')
+              }
+            >
+              {message}
+            </p>
+          ))}
+          {typing && (
+            <p ref={lastMessageRef} className="ellipses">
+              ...
+            </p>
+          )}
+        </div>
+      )}
+      <form action={formAction}>
+        <input type="text" name="name" autoComplete="off" />
         <button type="submit">Send</button>
       </form>
     </article>
