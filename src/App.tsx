@@ -62,7 +62,7 @@ export function App() {
     <article>
       <div>
         <div className="topMenu">
-          <h1>No-I Chatbot</h1>
+          <h1>Fake Chatbot</h1>
           <p>
             {perspective === 'user'
               ? 'Type below to talk to the chatbot.'
