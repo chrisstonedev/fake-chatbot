@@ -9,6 +9,9 @@ export function App() {
   >([]);
   const [, formAction] = useActionState(submitText, '');
   const [typing, setTyping] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [chatMode, setChatMode] = useState<'auto' | 'both'>('auto');
+  const [perspective, setPerspective] = useState<'bot' | 'user'>('user');
 
   useEffect(() => {
     lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -18,7 +21,7 @@ export function App() {
     const newName = formData.get('name');
     setChatLog((chatLog) => [
       ...chatLog,
-      { sender: 'user', message: `${newName}` },
+      { sender: perspective, message: `${newName}` },
     ]);
     return `${newName}`;
   }
@@ -28,29 +31,88 @@ export function App() {
       return;
     }
     const lastMessage = chatLog[chatLog.length - 1];
-    if (lastMessage.sender !== 'user') {
+    if (chatMode === 'auto') {
+      if (lastMessage.sender !== 'user') {
+        return;
+      }
+      const newMessage = generateBotMessage(lastMessage.message);
+      const typingOffset = 2000;
+      const typingTimeout = typingOffset + 2000;
+      setTimeout(() => setTyping(true), typingOffset);
+      setTimeout(() => setTyping(false), typingTimeout);
+      setTimeout(
+        () =>
+          setChatLog((chatLog) => [
+            ...chatLog,
+            { sender: 'bot', message: newMessage },
+          ]),
+        typingTimeout,
+      );
       return;
     }
-    const newMessage = generateBotMessage(lastMessage.message);
-    const typingOffset = 2000;
-    const typingTimeout = typingOffset + 2000;
-    setTimeout(() => setTyping(true), typingOffset);
-    setTimeout(() => setTyping(false), typingTimeout);
-    setTimeout(
-      () =>
-        setChatLog((chatLog) => [
-          ...chatLog,
-          { sender: 'bot', message: newMessage },
-        ]),
-      typingTimeout,
-    );
-  }, [chatLog]);
+    if (chatMode === 'both') {
+      setTimeout(
+        () => setPerspective(lastMessage.sender === 'bot' ? 'user' : 'bot'),
+        1000,
+      );
+    }
+  }, [chatLog, chatMode]);
 
   return (
     <article>
-      <h1>No-I Chatbot</h1>
+      <div>
+        <div className="topMenu">
+          <h1>No-I Chatbot</h1>
+          <p>
+            {perspective === 'user'
+              ? 'Type below to talk to the chatbot.'
+              : 'Type below to respond to yourself as the chatbot.'}
+          </p>
+          <button
+            className="settingsButton"
+            onClick={() => setIsSettingsOpen((prevState) => !prevState)}
+          >
+            Settings
+          </button>
+        </div>
+        {isSettingsOpen && (
+          <div>
+            <h2>Settings</h2>
+            <fieldset>
+              <legend>Select a chat style:</legend>
+              <label>
+                <input
+                  type="radio"
+                  id="auto"
+                  name="chatStyle"
+                  value="auto"
+                  checked={chatMode === 'auto'}
+                  onChange={() => {
+                    if (perspective === 'bot') {
+                      setPerspective('user');
+                    }
+                    setChatMode('auto');
+                  }}
+                />
+                Automatically receive random response
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  id="both"
+                  name="chatStyle"
+                  value="both"
+                  checked={chatMode === 'both'}
+                  onChange={() => setChatMode('both')}
+                />
+                Type for both users, back-and-forth
+              </label>
+            </fieldset>
+          </div>
+        )}
+      </div>
       {chatLog.length > 0 && (
-        <div className="chatLog">
+        <div className={'chatLog' + (perspective === 'bot' ? ' asBot' : '')}>
           {chatLog.map(({ sender, message }, index) => (
             <p
               key={index}
@@ -61,6 +123,7 @@ export function App() {
               }
               className={
                 'chatMessage ' +
+                (perspective === 'bot' ? 'asBot ' : '') +
                 (sender === 'bot' ? 'botMessage' : 'userMessage')
               }
             >

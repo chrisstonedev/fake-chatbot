@@ -1,3 +1,14 @@
+:root {
+    --user-message: #222244;
+    --user-message-light: #c0d0ff;
+    --bot-message: #444444;
+    --bot-message-light: #cccccc;
+    --user-message-as-bot: #333344;
+    --user-message-as-bot-light: #e0e8ff;
+    --bot-message-as-bot: #224422;
+    --bot-message-as-bot-light: #ccffcc;
+}
+
 #root {
     height: 100vh;
     text-align: center;
@@ -13,7 +24,15 @@
     padding: 16px 0;
 
     @media (prefers-color-scheme: light) {
-        background: #ffeeee;
+        background: #fff0f0;
+    }
+}
+
+.chatLog.asBot {
+    background: #001a10;
+
+    @media (prefers-color-scheme: light) {
+        background: #f0fff8;
     }
 }
 
@@ -25,8 +44,19 @@ article {
     width: 100%;
 }
 
-h1 {
-    margin: 0;
+.topMenu {
+    position: relative;
+
+    h1, p {
+        margin: 0;
+    }
+
+    .settingsButton {
+        height: 40px;
+        position: absolute;
+        right: 8px;
+        top: calc(50% - 20px);
+    }
 }
 
 
@@ -39,19 +69,37 @@ h1 {
 
     &.botMessage {
         align-self: start;
-        background: #444444;
+        background: var(--bot-message);
 
         @media (prefers-color-scheme: light) {
-            background: #cccccc;
+            background: var(--bot-message-light);
         }
     }
 
     &.userMessage {
         align-self: end;
-        background: #222244;
+        background: var(--user-message);
 
         @media (prefers-color-scheme: light) {
-            border-left-color: #ddddff;
+            background: var(--user-message-light);
+        }
+    }
+
+    &.botMessage.asBot {
+        align-self: end;
+        background: var(--bot-message-as-bot);
+
+        @media (prefers-color-scheme: light) {
+            background: var(--bot-message-as-bot-light);
+        }
+    }
+
+    &.userMessage.asBot {
+        align-self: start;
+        background: var(--user-message-as-bot);
+
+        @media (prefers-color-scheme: light) {
+            background: var(--user-message-as-bot-light);
         }
     }
 }
@@ -64,11 +112,11 @@ h1 {
     left: -24px;
     top: calc(50% - 15px);
     border: 8px solid transparent;
-    border-right: 16px solid #444444;
+    border-right: 16px solid var(--bot-message);
     z-index: 3;
 
     @media (prefers-color-scheme: light) {
-        border-right-color: #cccccc;
+        border-right-color: var(--bot-message-light);
     }
 }
 
@@ -80,11 +128,44 @@ h1 {
     right: -24px;
     top: calc(50% - 15px);
     border: 8px solid transparent;
-    border-left: 16px solid #222244;
+    border-left: 16px solid var(--user-message);
     z-index: 3;
 
     @media (prefers-color-scheme: light) {
-        border-left-color: #ddddff;
+        border-left-color: var(--user-message-light);
+    }
+}
+
+.botMessage.asBot:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: inherit;
+    right: -24px;
+    top: calc(50% - 15px);
+    border: 8px solid transparent;
+    border-left: 16px solid var(--bot-message-as-bot);
+    z-index: 3;
+
+    @media (prefers-color-scheme: light) {
+        border-left-color: var(--bot-message-as-bot-light);
+    }
+}
+
+.userMessage.asBot:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -24px;
+    top: calc(50% - 15px);
+    border: 8px solid transparent;
+    border-right: 16px solid var(--user-message-as-bot);
+    z-index: 3;
+
+    @media (prefers-color-scheme: light) {
+        border-right-color: var(--user-message-as-bot-light);
     }
 }
 
@@ -103,5 +184,16 @@ form {
     input {
         font-size: 16px;
         width: 100%;
+    }
+}
+
+fieldset {
+    align-items: start;
+    border: none;
+    display: flex;
+    flex-direction: column;
+
+    legend {
+        text-align: start;
     }
 }
