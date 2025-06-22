@@ -136,16 +136,6 @@ article {
     }
 }
 
-@media (prefers-color-scheme: light) {
-    .botMessage:after {
-        border-right-color: var(--bot-message-light);
-    }
-
-    .userMessage:after {
-        border-left-color: var(--user-message-light);
-    }
-}
-
 .botMessage.asBot:after {
     content: "";
     position: absolute;
@@ -175,6 +165,24 @@ article {
     z-index: 3;
 
     @media (prefers-color-scheme: light) {
+        border-right-color: var(--user-message-as-bot-light);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .botMessage:after {
+        border-right-color: var(--bot-message-light);
+    }
+
+    .botMessage.asBot:after {
+        border-left-color: var(--bot-message-as-bot-light);
+    }
+
+    .userMessage:after {
+        border-left-color: var(--user-message-light);
+    }
+
+    .userMessage.asBot:after {
         border-right-color: var(--user-message-as-bot-light);
     }
 }
